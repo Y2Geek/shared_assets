@@ -1,24 +1,46 @@
 /**
- * Returns true if class list of given element includes 'hide'
- * @param {String} ele 
+ * Returns true if the class list of the given element includes 'hide'
+ * Returns false otherwise.
+ * @param {HTML Element} ele 
  * @returns Boolean
  */
 function isIdHidden(ele) {
-    let ele1 = document.getElementById(ele);
-    return ele1.classList.contains('hide');
+    return ele.classList.contains('hide');
 }
 
 
 /**
- * Returns an element or an array of elements 
+ * Toggle the 'hide' class on and off for given element
+ * @param {HTMLElement} ele 
+ */
+function toggleHide(ele) {
+    ele.classList.toggle('hide');
+}
+
+
+/**
+ * Toggle the 'hide' class on and off for given element
+ * @param {Collection} col
+ */
+function toggleHideForCollection(col) {
+    for(let ele of col) {
+        toggleHide(ele);
+    }
+}
+
+
+/**
+ * Returns an element or a HTML Collection of elements 
  * @param {String} by (get element by)
- * @param {String} name (name of element )
- * @returns 
+ * @param {String} name (name to search for)
+ * @returns HTML Element/HTML Collection
  */
 function getElement(by, name) {
     switch(by) {
         case 'id':
             return document.getElementById(name);
+        case 'name':
+            return document.getElementsByName(name);
         case 'class':
             return document.getElementsByClassName(name);
         case 'tag':
@@ -28,91 +50,50 @@ function getElement(by, name) {
 
 
 /**
- * Returns an Array of Arrays of elements
- * @param {Array of string element names e.g h1} arr 
- * @param {String - get elements by} by 
- * @returns Array
- */
-function getArrayOfElements(arr, by) {
-    let elements = [];
-    
-    for(let e of arr) {
-        elements.push(getElement(by, e))
-    }
-
-    return elements;
-}
-
-
-/**
- * Toggle the 'hide' class on and off for given element
- * @param {HTMLElement} ele 
- */
-function toggleClass(ele, classItem) {
-    ele.classList.toggle(classItem);
-}
-
-
-/**
- * Toggle the 'hide' class on and off for given ID
+ * Toggle the 'hide' class for an element with given ID
  * @param {string} ele 
  */
 function showHideID(name) {
     // Get element by ID
-    ele = getElement('id', name);
+    let ele = getElement('id', name);
 
     // Now set value
-    toggleClass(ele, 'hide');
+    toggleHide(ele);
 }
 
 
 /**
- * Toggle the 'hide' class on and off for given each element with given class
+ * Toggle the 'hide' class for an element with given name
+ * @param {string} ele 
+ */
+function showHideName(name) {
+    // Get element by ID
+    let ele = getElement('name', name);
+
+    // Now set value
+    toggleHide(ele);
+}
+
+
+/**
+ * Toggle the 'hide' class for each element of a given class
  * @param {string} ele 
  */
 function showHideClass(name) {
     // Get collection of elements
     let elements = getElement('class', name);
-
-    //Set value for each element identified
-    for(let ele of elements) {
-        toggleClass(ele, 'hide');
-    }
+    toggleHideForCollection(elements);
 }
 
 
 /**
- * Removes the old class from given array of elements, and adds the new class to each
- * @param {Array} ele 
- * @param {String} oldClass 
- * @param {String} newClass 
+ * Toggle the 'hide' class for each element of a given tag
+ * @param {string} name 
  */
-function swapClass(ele, oldClass, newClass) {
-    for(let e of ele) {
-        for(let ele1 of e) {
-            ele1.classList.remove(oldClass);
-            ele1.classList.add(newClass);
-        }
-    }
+function showHideTag(name) {
+    // Get collection of elements
+    let elements = getElement('tag', name);
+    toggleHideForCollection(elements);
 }
 
 
-function swapClassByID(ele, oldClass, newClass) {
-    let elements = getArrayOfElements(ele, 'id');
-
-    swapClass(elements, oldClass, newClass);
-}
-
-
-function swapClassByClassName(ele, oldClass, newClass) {
-    let elements = getArrayOfElements(ele, 'class');
-
-    swapClass(elements, oldClass, newClass);
-}
-
-
-function swapClassByTag(ele, oldClass, newClass) {
-    let elements = getArrayOfElements(ele, 'tag');
-
-    swapClass(elements, oldClass, newClass);
-}
